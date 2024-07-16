@@ -14,6 +14,8 @@ Cloud: GCP
 Diagram: Eraser 
 
 # API Design
+![Campaign Manager Dashbaord](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___---figure----b7p6vBU3140GsUjOgLA1---figure---rvaFkUKilZvezA5uUd_h5w.png "Campaign Manager Dashbaord")
+
 ## Entity
 - Account
 - Campaign
