@@ -1,31 +1,27 @@
 export type Nullable<T> = T | null | undefined;
 
-export type Product = {
-  productId: string;
-  title: string;
-  desc: string;
-  type: "app" | "website" | "other";
-};
-
 export type Account = {
-  accountId?: string;
-  status: string;
-  created?: string;
-  lastUpdated?: string;
-  name: string;
-  timezone: string;
+  id: string;
+  title: string;
+  status: "ACTIVE" | "DISABLED";
+  createdAt: string;
+  updatedAt: string;
 };
 
-export type Campaign = {};
+export interface CreateCampaign {
+  campaignName: string;
+  status: "ACTIVE" | "DISABLED";
+  type: string;
+  dailyBudget: string;
+  schedule: {
+    start: string;
+    end: string;
+  };
+}
 
-export type TrackingLink = {
-  trackingLinkId: string;
-  trackingCompany: string;
-  clickThroughLink: string;
-  viewThroughLink: string;
-};
-
-export type Creative = {
-  creativeId: string;
-  type: "image" | "video" | "other";
-};
+export interface Campaign extends CreateCampaign {
+  id: string;
+  accountId: string;
+  createdAt: string;
+  updatedAt: string;
+}

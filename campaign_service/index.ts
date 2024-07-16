@@ -1,17 +1,17 @@
-import "./src/config"
+import "./src/config";
 
-import express from "express"
+import express from "express";
 
 // controllers
-import accountControllers from "./src/controllers/accountController"
+import platformController from "./src/controllers/platformController";
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/accounts", accountControllers);
+app.use("/platforms", platformController);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-    console.log(`Campaign service is running on http://localhost:${PORT}`)
-})
+  console.log(`Campaign service is running on http://localhost:${PORT}`);
+});
