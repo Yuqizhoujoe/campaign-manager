@@ -8,13 +8,15 @@ import {
 } from "../types/network";
 import { Account } from "../types/data";
 
+// controllers
+import campaignController from "./campaignController";
+
 // services
 import {
   createAccount,
   getAccountById,
   updateAccount,
 } from "../services/accountService";
-import { error } from "console";
 
 const router = Router();
 
@@ -36,16 +38,16 @@ const getAccountController = async (
 };
 
 const createAccountController = async (
-  req: CampaignServiceRequest<{ name: string; timezone: string }>,
+  req: CampaignServiceRequest<{ title: string }>,
   res: CampaignServiceResponse<Account | ErrorData>
 ) => {
-  const { name, timezone } = req.body;
+  const { title } = req.body;
   try {
-    if (!name || !timezone) {
-      return res.status(400).json({ error: "Miss name or timezone!" });
+    if (!title) {
+      return res.status(400).json({ error: "Miss title!" });
     }
 
-    const createdAccount = await createAccount({ name, timezone });
+    const createdAccount = await createAccount({ title });
     return res.status(201).json(createdAccount);
   } catch (error: any) {
     console.error("ACCOUNT_CONTROLLER_CREATE_ACCOUNT_ERROR: ", error);
@@ -54,22 +56,20 @@ const createAccountController = async (
 };
 
 const updateAccountController = async (
-  req: CampaignServiceRequest<{ name: string; timezone: string }>,
+  req: CampaignServiceRequest<{ title: string }>,
   res: CampaignServiceResponse<Account | ErrorData>
 ) => {
   const { accountId } = req.params;
-  const { name, timezone } = req.body;
+  const { title } = req.body;
   try {
     if (!accountId) {
       return res.status(400).json({ error: "Missing account id!" });
     }
-    if (!name && !timezone) {
-      return res
-        .status(400)
-        .json({ error: "Missing name or timezone properties!" });
+    if (!title) {
+      return res.status(400).json({ error: "Missing title!" });
     }
 
-    const updatedAccount = await updateAccount(accountId, { name, timezone });
+    const updatedAccount = await updateAccount(accountId, { title });
     return res.status(200).json(updatedAccount);
   } catch (error: any) {
     console.error("ACCOUNT_CONTROLLER_UPDATE_ACCOUNT_ERROR: ", error);
@@ -80,5 +80,7 @@ const updateAccountController = async (
 router.get("/:accountId", getAccountController);
 router.post("/", createAccountController);
 router.put("/:accountId", updateAccountController);
+
+router.use("/:accountId/campaigns", campaignController);
 
 export default router;

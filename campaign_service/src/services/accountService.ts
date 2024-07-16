@@ -11,15 +11,14 @@ export const getAccountById = async (
   return account;
 };
 
-export const createAccount = async (
-  data: Partial<Account>
-): Promise<Account> => {
-  const account: Account = {
+export const createAccount = async (data: {
+  title: string;
+}): Promise<Account> => {
+  const account: Omit<Account, "id"> = {
     status: "ACTIVE",
-    created: new Date().toISOString(),
-    lastUpdated: new Date().toISOString(),
-    name: data.name ? data.name : "",
-    timezone: data.timezone ? data.timezone : "",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    title: data.title,
   };
 
   const key = datastore.key(accountKind);
@@ -29,7 +28,7 @@ export const createAccount = async (
   };
 
   await datastore.save(entity);
-  return { ...account, accountId: key.id! };
+  return { ...account, id: key.id! };
 };
 
 export const updateAccount = async (
