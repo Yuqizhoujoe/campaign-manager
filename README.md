@@ -14,7 +14,7 @@ Cloud: GCP
 Diagram: Eraser 
 
 # API Design
-![image.png](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___PtHCzjhlo5POgduChH62y.png "image.png")
+![image.png](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___0fV73y8YlEqWLqvabvRpg.png "image.png")
 
 [﻿View on Eraser](https://app.eraser.io/workspace/5LZtR5zhZ7DMnJkKh6TZ?elements=rvaFkUKilZvezA5uUd_h5w) 
 
