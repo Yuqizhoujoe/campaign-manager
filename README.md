@@ -14,9 +14,7 @@ Cloud: GCP
 Diagram: Eraser 
 
 # API Design
-![image.png](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___0fV73y8YlEqWLqvabvRpg.png "image.png")
-
-[﻿View on Eraser](https://app.eraser.io/workspace/5LZtR5zhZ7DMnJkKh6TZ?elements=rvaFkUKilZvezA5uUd_h5w) 
+![Campaign Manager Dashbaord](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___---figure---IrSGwvo4k4Vab3XYjQ9Qp---figure---1NCVGqQfwnyg3w6q-cadMQ.png "Campaign Manager Dashbaord")
 
 ## Entity
 - Account
@@ -30,6 +28,7 @@ Each account can have multiple campaigns
 ```
 Account {
   id: string;
+  account_id: string;
   title: string;
   status: "ACTIVE" | "DISABLED";
   created_at: timestamp;
@@ -59,6 +58,7 @@ response[200]: Account
 ## Campaign
 ```
 Campaign {
+  id: string;
   campaign_id: string;
   campaign_name: string;
   account_id: string;
@@ -79,6 +79,7 @@ POST
 url: `/platforms/${platform_id}/accounts/${account_id}/campaigns`
 data: {
   campaign_name: string;
+  campaign_id: string;
   type: string;
   daily_budget: string;
   schedule: {
@@ -124,17 +125,26 @@ Report {
 ### Query by platform
 ```
 GET
-url: `platforms/${platform_id}/reports
+url: `/reports/platforms/${platform_id}
 
 response[200]: Report[]
 ```
 ### Query by account
 ```
 GET
-url: `platforms/${platform_id}/accounts/${account_id}/reports`
+url: `/reports/accounts/${account_id}`
 
 response[200]: Report[]
 ```
+### Query by report
+```
+GET
+url: `/reports/campaigns/${campaign_id}`
+
+response[200]: Report[]
+```
+
+
 
 
 
