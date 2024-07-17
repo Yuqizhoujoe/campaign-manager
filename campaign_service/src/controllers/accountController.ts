@@ -6,23 +6,37 @@ import {
   CampaignServiceResponse,
   ErrorData,
 } from "../types/network";
-import { Account } from "../types/data";
-
-// controllers
-import campaignController from "./campaignController";
+import { AccountType } from "../types/data";
 
 // services
 import {
   createAccount,
   getAccountById,
+  getAllAccounts,
   updateAccount,
 } from "../services/accountService";
 
 const router = Router();
 
+const getAllAccountsController = async (
+  req: CampaignServiceRequest<null>,
+  res: CampaignServiceResponse<AccountType[] | ErrorData>
+) => {
+  try {
+    const accounts = await getAllAccounts();
+    if (!accounts || !accounts.length) {
+      return res.status(404).json({ error: "Accounts not available" });
+    }
+    return res.status(200).json(accounts);
+  } catch (error: any) {
+    console.error("GET_ACCOUNTS_CONTROLLER_ERRROR: ", error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 const getAccountController = async (
   req: CampaignServiceRequest<null>,
-  res: CampaignServiceResponse<Account | ErrorData>
+  res: CampaignServiceResponse<AccountType | ErrorData>
 ) => {
   const { accountId } = req.params;
   try {
@@ -38,16 +52,16 @@ const getAccountController = async (
 };
 
 const createAccountController = async (
-  req: CampaignServiceRequest<{ title: string }>,
-  res: CampaignServiceResponse<Account | ErrorData>
+  req: CampaignServiceRequest<{ title: string; accountId: string }>,
+  res: CampaignServiceResponse<AccountType | ErrorData>
 ) => {
-  const { title } = req.body;
+  const { title, accountId } = req.body;
   try {
-    if (!title) {
-      return res.status(400).json({ error: "Miss title!" });
+    if (!title || !accountId) {
+      return res.status(400).json({ error: "Miss title or accountId!" });
     }
 
-    const createdAccount = await createAccount({ title });
+    const createdAccount = await createAccount({ title, accountId });
     return res.status(201).json(createdAccount);
   } catch (error: any) {
     console.error("ACCOUNT_CONTROLLER_CREATE_ACCOUNT_ERROR: ", error);
@@ -56,20 +70,20 @@ const createAccountController = async (
 };
 
 const updateAccountController = async (
-  req: CampaignServiceRequest<{ title: string }>,
-  res: CampaignServiceResponse<Account | ErrorData>
+  req: CampaignServiceRequest<{ status: "ACTIVE" | "DISABLED" }>,
+  res: CampaignServiceResponse<AccountType | ErrorData>
 ) => {
   const { accountId } = req.params;
-  const { title } = req.body;
+  const { status } = req.body;
   try {
     if (!accountId) {
       return res.status(400).json({ error: "Missing account id!" });
     }
-    if (!title) {
-      return res.status(400).json({ error: "Missing title!" });
+    if (!status) {
+      return res.status(400).json({ error: "Missing status!" });
     }
 
-    const updatedAccount = await updateAccount(accountId, { title });
+    const updatedAccount = await updateAccount(parseInt(accountId), { status });
     return res.status(200).json(updatedAccount);
   } catch (error: any) {
     console.error("ACCOUNT_CONTROLLER_UPDATE_ACCOUNT_ERROR: ", error);
@@ -78,9 +92,8 @@ const updateAccountController = async (
 };
 
 router.get("/:accountId", getAccountController);
+router.get("/", getAllAccountsController);
 router.post("/", createAccountController);
 router.put("/:accountId", updateAccountController);
-
-router.use("/:accountId/campaigns", campaignController);
 
 export default router;
