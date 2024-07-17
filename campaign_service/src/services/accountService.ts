@@ -1,47 +1,71 @@
 import datastore from "../datastore";
-import { Account } from "../types/data";
+import { AccountType } from "../types/data";
 
 const accountKind = "Account";
+const namespace = "campaign-manager-accounts";
+
+export const getAllAccounts = async (): Promise<AccountType[]> => {
+  const query = datastore.createQuery(namespace, accountKind);
+  const [accounts] = await query.run();
+  return accounts;
+};
 
 export const getAccountById = async (
   accountId: string
-): Promise<Account | null> => {
-  const key = datastore.key([accountKind, datastore.int(accountId)]);
+): Promise<AccountType | null> => {
+  const key = datastore.key({
+    namespace: namespace,
+    path: [accountKind, accountId],
+  });
+
   const [account] = await datastore.get(key);
   return account;
 };
 
 export const createAccount = async (data: {
   title: string;
-}): Promise<Account> => {
-  const account: Omit<Account, "id"> = {
+  accountId: string;
+}): Promise<AccountType> => {
+  const key = datastore.key({
+    namespace: namespace,
+    path: [accountKind, data.accountId],
+  });
+  const account: Omit<AccountType, "id"> = {
+    ...data,
     status: "ACTIVE",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    title: data.title,
   };
-
-  const key = datastore.key(accountKind);
   const entity = {
     key,
     data: account,
   };
-
   await datastore.save(entity);
   return { ...account, id: key.id! };
 };
 
 export const updateAccount = async (
-  accountId: string,
-  account: Partial<Account>
-): Promise<Account> => {
-  const key = datastore.key([accountKind, datastore.int(accountId)]);
-  const [existingAccount] = await datastore.get(key);
-  if (!existingAccount) {
-    throw new Error("Account not found!!");
+  accountId: number,
+  accountData: Partial<AccountType>
+): Promise<AccountType> => {
+  const key = datastore.key({
+    namespace: namespace,
+    path: [accountKind, accountId],
+  });
+  const [account] = await datastore.get(key);
+  if (!account) {
+    throw new Error("Account not available");
   }
 
-  const updatedAccount = { ...existingAccount, ...account };
-  await datastore.save({ key, data: updateAccount });
+  const updatedAccount = {
+    ...account,
+    ...accountData,
+  };
+  const entity = {
+    key: key,
+    data: updatedAccount,
+  };
+
+  await datastore.save(entity);
   return updatedAccount;
 };

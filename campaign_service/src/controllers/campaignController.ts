@@ -6,10 +6,10 @@ import {
   CampaignServiceResponse,
   ErrorData,
 } from "../types/network";
-import { Campaign, CreateCampaign } from "../types/data";
+import { CampaignType, CreateCampaign } from "../types/data";
 import {
   createCampaign,
-  getAllCampaigns,
+  getAllCampaignsByAccount,
   getCampaignById,
 } from "../services/campaignService";
 
@@ -17,13 +17,21 @@ const router = Router();
 
 const cretaeCampaignController = async (
   req: CampaignServiceRequest<CreateCampaign>,
-  res: CampaignServiceResponse<Campaign | ErrorData>
+  res: CampaignServiceResponse<CampaignType | ErrorData>
 ) => {
   try {
-    const { campaignName, status, type, dailyBudget, schedule } = req.body;
+    const { campaignId, campaignName, status, type, dailyBudget, schedule } =
+      req.body;
     const { accountId } = req.params;
 
-    if (!campaignName || !status || !type || !dailyBudget || !schedule) {
+    if (
+      !campaignId ||
+      !campaignName ||
+      !status ||
+      !type ||
+      !dailyBudget ||
+      !schedule
+    ) {
       return res.status(400).json({ error: "Missing fields!" });
     }
 
@@ -42,10 +50,12 @@ const cretaeCampaignController = async (
 
 const getCampaignsController = async (
   req: CampaignServiceRequest<null>,
-  res: CampaignServiceResponse<Campaign[] | ErrorData>
+  res: CampaignServiceResponse<CampaignType[] | ErrorData>
 ) => {
   try {
-    const campaigns = await getAllCampaigns();
+    const { accountId } = req.params;
+    console.log(req.params);
+    const campaigns = await getAllCampaignsByAccount(accountId);
     return res.status(200).json(campaigns);
   } catch (error: any) {
     console.error("GET_ALL_CAMPAIGN_CONTROLLER_ERROR: ", error);
@@ -55,7 +65,7 @@ const getCampaignsController = async (
 
 const getCampaignController = async (
   req: CampaignServiceRequest<null>,
-  res: CampaignServiceResponse<Campaign | ErrorData>
+  res: CampaignServiceResponse<CampaignType | ErrorData>
 ) => {
   try {
     const { campaignId } = req.params;
@@ -71,8 +81,17 @@ const getCampaignController = async (
   }
 };
 
-router.post("/", cretaeCampaignController);
-router.get("/", getCampaignsController);
-router.get("/:campaignId", getCampaignController);
+router.get(
+  "/platforms/:platformId/accounts/:accountId",
+  getCampaignsController
+);
+router.get(
+  "/:campaignId/platforms/:platformId/accounts/:accountId/",
+  getCampaignController
+);
+router.post(
+  "/platforms/:platformId/accounts/:accountId",
+  cretaeCampaignController
+);
 
 export default router;
