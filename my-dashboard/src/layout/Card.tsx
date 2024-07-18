@@ -1,7 +1,7 @@
 import "./Card.css";
 
 // types
-import { CardTypeKey } from "../types";
+import { CardTypeKey, CardData } from "../types";
 
 import Card from "../components/CardComponent";
 /*
@@ -13,19 +13,20 @@ function CardContainer({
   data,
   onSelect,
 }: {
-  data: { [key in CardTypeKey]: number };
+  data: CardData | null;
   onSelect: (cardType: CardTypeKey) => void;
 }) {
   const renderCards = () => {
+    if (!data) return null;
     return (
       <div className="cards">
-        {Object.keys(data).map((key) => {
+        {Object.entries(data).map(([key, value]) => {
           return (
             <div className="card" key={key}>
               <Card
-                total={data[key as CardTypeKey]}
+                total={value}
                 cardKey={key as CardTypeKey}
-                onClick={onSelect}
+                onClick={() => onSelect(key as CardTypeKey)}
               />
             </div>
           );

@@ -4,14 +4,14 @@ import {
   CampaignServiceResponse,
   ErrorData,
 } from "../types/network";
-import { ReportType } from "../types/data";
+import { ReportType, AggregatedReports } from "../types/data";
 
 import {
   createReport,
-  fetchReportsByPlatformId,
-  fetchReportsByAccountId,
   deleteReportById,
-  fetchReportsByCampaignId,
+  aggregateReportByCampaign,
+  fetchReportsByPlatformId,
+  aggregateReportByAccount,
 } from "../services/reportService";
 
 const router = Router();
@@ -36,7 +36,7 @@ const queryPlatformReportController = async (
   try {
     const { platformId } = req.params;
     const reports = await fetchReportsByPlatformId(platformId);
-    if (!reports || !reports.length) {
+    if (!reports) {
       return res.status(404).json({ error: "Report not available" });
     }
     return res.status(200).json(reports);
@@ -48,12 +48,12 @@ const queryPlatformReportController = async (
 
 const queryAccountReportController = async (
   req: CampaignServiceRequest<null>,
-  res: CampaignServiceResponse<ReportType[] | ErrorData>
+  res: CampaignServiceResponse<AggregatedReports | ErrorData>
 ) => {
   try {
     const { accountId } = req.params;
-    const reports = await fetchReportsByAccountId(accountId);
-    if (!reports || !reports.length) {
+    const reports = await aggregateReportByAccount(accountId);
+    if (!reports) {
       return res.status(404).json({ error: "Report not found" });
     }
     return res.status(200).json(reports);
@@ -63,14 +63,14 @@ const queryAccountReportController = async (
   }
 };
 
-const queryCampaignReportController = async (
+const queryCampaignsReportController = async (
   req: CampaignServiceRequest<null>,
-  res: CampaignServiceResponse<ReportType[] | ErrorData>
+  res: CampaignServiceResponse<AggregatedReports | ErrorData>
 ) => {
   try {
-    const { campaignId } = req.params;
-    const reports = await fetchReportsByCampaignId(campaignId);
-    if (!reports || !reports.length) {
+    const { accountId } = req.params;
+    const reports = await aggregateReportByCampaign(accountId);
+    if (!reports) {
       return res.status(404).json({ error: "Report not found" });
     }
     return res.status(200).json(reports);
@@ -96,7 +96,7 @@ const deleteReportController = async (
 
 router.get("/platforms/:platformId", queryPlatformReportController);
 router.get("/accounts/:accountId", queryAccountReportController);
-router.get("/campaigns/:campaignId", queryCampaignReportController);
+router.get("/campaigns/:accountId", queryCampaignsReportController);
 router.post("/", createReportController);
 router.delete("/:reportId", deleteReportController);
 

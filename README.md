@@ -13,15 +13,27 @@ Cloud: GCP
 
 Diagram: Eraser 
 
+# UI
+### Account Search Page
+![image.png](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___pu0fNLifqQ1PcBmJFuMcS.png "image.png")
+
+
+
+### Account page
+![image.png](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___P7qPQ56Bbp7sxtnYkkUcq.png "image.png")
+
+
+
 # API Design
-![Campaign Manager Dashbaord](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___---figure---IrSGwvo4k4Vab3XYjQ9Qp---figure---1NCVGqQfwnyg3w6q-cadMQ.png "Campaign Manager Dashbaord")
+![Campaign Manager Dashbaord](/.eraser/5LZtR5zhZ7DMnJkKh6TZ___U806QwDlsSPtLlAvlCOgMCkeE3W2___---figure---uiJUD3CqWKT3L4ypFf2iw---figure---1NCVGqQfwnyg3w6q-cadMQ.png "Campaign Manager Dashbaord")
+
+
 
 ## Entity
 - Account
 - Campaign
 - Report
 Each platform can have multiple campaigns
-
 Each account can have multiple campaigns
 
 ## Account
@@ -143,12 +155,6 @@ url: `/reports/campaigns/${campaign_id}`
 
 response[200]: Report[]
 ```
-
-
-
-
-
-
 
 
 

@@ -44,3 +44,20 @@ export type ReportType = {
   ctr: string;
   cpm: number;
 };
+
+export type AggregatedReportsData = {
+  [id: string]: {
+    campaignName: string;
+    totalRevenue: number;
+    totalCPC: number;
+    totalClick: number;
+    totalImpression: number;
+    totalMoneySpent: number;
+    reports: ReportType[];
+  };
+};
+
+export type AggregatedReports = {
+  type: "Campaign" | "Account";
+  data: AggregatedReportsData;
+};

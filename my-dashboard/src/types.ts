@@ -61,3 +61,34 @@ export type ChartDataType = {
   dates: string[];
   label: CardTypeKey;
 };
+
+export type AggregatedReportsData = {
+  [id: string]: {
+    totalRevenue: number;
+    totalCPC: number;
+    totalClick: number;
+    totalImpression: number;
+    totalMoneySpent: number;
+    campaignName: string;
+    reports: ReportType[];
+  };
+};
+
+export type AggregatedReports = {
+  type: "Campaign" | "Account";
+  data: AggregatedReportsData;
+};
+
+export type CardData = {
+  [key in CardTypeKey]: number;
+};
+
+export type CampaignReportsTableType = {
+  revenue: number;
+  cpc: number;
+  clickCount: number;
+  moneySpent: number;
+  impCount: number;
+  campaignName: string;
+  campaignId: string;
+};
