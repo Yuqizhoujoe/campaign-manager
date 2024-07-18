@@ -1,0 +1,7 @@
+.card-container {
+  margin: 1rem;
+}
+.cards {
+  display: flex;
+  justify-content: center;
+}

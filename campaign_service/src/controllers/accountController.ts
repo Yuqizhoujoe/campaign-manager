@@ -14,6 +14,7 @@ import {
   getAccountById,
   getAllAccounts,
   updateAccount,
+  queryAccountByName,
 } from "../services/accountService";
 
 const router = Router();
@@ -23,7 +24,13 @@ const getAllAccountsController = async (
   res: CampaignServiceResponse<AccountType[] | ErrorData>
 ) => {
   try {
-    const accounts = await getAllAccounts();
+    const { q } = req.query || {};
+    let accounts: AccountType[] = [];
+    if (q && typeof q === "string") {
+      accounts = await queryAccountByName(q);
+    } else {
+      accounts = await getAllAccounts();
+    }
     if (!accounts || !accounts.length) {
       return res.status(404).json({ error: "Accounts not available" });
     }
