@@ -1,6 +1,7 @@
 import "./src/config";
 
 import express from "express";
+import cors from "cors";
 
 // controllers
 import platformController from "./src/controllers/platformController";
@@ -10,6 +11,7 @@ import campaignController from "./src/controllers/campaignController";
 import { createReportsInBatch } from "./src/services/reportService";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
